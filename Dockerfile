@@ -26,7 +26,7 @@ COPY ./docs/package.json ./docs/yarn.lock ./
 
 WORKDIR /build
 
-COPY ./build/build.csproj .
+COPY ./build/build.fsproj .
 
 RUN dotnet restore
 
@@ -40,7 +40,7 @@ RUN TRAVIS_BUILD_NUMBER=$TRAVIS_BUILD_NUMBER \
   TRAVIS_COMMIT=$TRAVIS_COMMIT \
   TRAVIS_PULL_REQUEST=$TRAVIS_PULL_REQUEST \
   TRAVIS_BRANCH=$TRAVIS_BRANCH \
-  dotnet run --project build/build.csproj
+  dotnet run --project build/build.fsproj
 
 FROM microsoft/dotnet:2.1.5-runtime-deps-alpine3.7 AS runtime
 
