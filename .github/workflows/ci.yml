@@ -12,22 +12,22 @@ jobs:
       fail-fast: false
       matrix:
         env:
-          - library-version: 1.2.0-beta.5
+          - library-version: 1.2.0-beta.8
             container-runtime-version: 2.2.5
             container-runtime: alpine3.9
             runtime: alpine-x64
             os-version: Alpine 3.9
-          - library-version: 1.2.0-beta.5
+          - library-version: 1.2.0-beta.8
             container-runtime-version: 2.2.5
             container-runtime: alpine3.8
             runtime: alpine-x64
             os-version: Alpine 3.8
-          - library-version: 1.2.0-beta.5
+          - library-version: 1.2.0-beta.8
             container-runtime-version: 2.2.5
             container-runtime: stretch-slim
             runtime: debian.9-x64
             os-version: Debian 9
-          - library-version: 1.2.0-beta.5
+          - library-version: 1.2.0-beta.8
             container-runtime-version: 2.2.5
             container-runtime: bionic
             runtime: ubuntu.18.04-x64
@@ -36,7 +36,7 @@ jobs:
     name: continuous-integration/github/${{ matrix.env.container-runtime }}
     steps:
       - name: checkout
-        uses: actions/checkout@master
+        uses: actions/checkout@v4
       - name: build
         run: "./build.sh"
         env:
@@ -46,31 +46,15 @@ jobs:
           CONTAINER_RUNTIME: ${{ matrix.env.container-runtime }}
           RUNTIME: ${{ matrix.env.runtime }}
       - name: Docker Login
-        uses: actions/docker/login@fe7ed3c
         if: github.event_name == 'push'
-        env:
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      - name: Docker Push
-        uses: actions/docker/cli@fe7ed3c
-        if: github.event_name == 'push'
+        uses: docker/login-action@v3
         with:
-          args: push sqlstreamstore/server
-
-  docker-hub-docs:
-    runs-on: ubuntu-latest
-    needs: continuous-integration
-    steps:
-      - name: checkout
-        uses: actions/checkout@master
-      - name: Generate Docker Tag List
-        uses: ./.github/actions/docker-tag-list
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Docker Push
         if: github.event_name == 'push'
-      - name: Publish Docker Hub Readme
-        uses: peter-evans/dockerhub-description@v2.0.0
-        env:
-          DOCKERHUB_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKERHUB_REPOSITORY: sqlstreamstore/server
-          README_FILEPATH: ./README.dockerhub.md
-        if: github.event_name == 'push'
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: thefringeninja/sqlstreamstore-server

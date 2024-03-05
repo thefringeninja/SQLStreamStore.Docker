@@ -3,13 +3,13 @@
 set -e
 
 CONTAINER_RUNTIME=${CONTAINER_RUNTIME:-alpine3.9}
-LIBRARY_VERSION=${LIBRARY_VERSION:-1.2.0-beta.5.5}
-CLIENT_VERSION=${CLIENT_VERSION:-0.9.3}
+LIBRARY_VERSION=${LIBRARY_VERSION:-1.2.0-beta.8}
+CLIENT_VERSION=${CLIENT_VERSION:-0.9.4}
 
 LOCAL_IMAGE="sql-stream-store-server"
 LOCAL="${LOCAL_IMAGE}:latest"
 
-REMOTE_IMAGE="sqlstreamstore/server"
+REMOTE_IMAGE="thefringeninja/sqlstreamstore-server"
 
 docker build \
     --build-arg CONTAINER_RUNTIME_VERSION=${CONTAINER_RUNTIME_VERSION:-2.2.6} \
@@ -17,6 +17,7 @@ docker build \
     --build-arg RUNTIME=${RUNTIME:-alpine-x64} \
     --build-arg LIBRARY_VERSION=${LIBRARY_VERSION} \
     --build-arg CLIENT_VERSION=${CLIENT_VERSION} \
+    --secret id=GITHUB_TOKEN \
     --tag ${LOCAL} \
     .
 
