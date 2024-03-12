@@ -34,7 +34,7 @@ namespace SqlStreamStore.Server
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Is(configuration.LogLevel)
-                .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+                .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Information)
                 .Enrich.FromLogContext()
                 .WriteTo.Console(
                     outputTemplate:

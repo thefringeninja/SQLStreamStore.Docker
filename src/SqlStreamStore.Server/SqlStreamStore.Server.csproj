@@ -9,7 +9,7 @@
     <StartupObject></StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="ILLink.Tasks" Version="0.1.5-preview-1841731" />
+    <PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="0.1.5-preview-1841731" />
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.ResponseCompression" Version="2.2.0" />
@@ -23,6 +23,7 @@
     <PackageReference Include="SqlStreamStore.MySql" Version="$(LibraryVersion)" />
     <PackageReference Include="SqlStreamStore.Postgres" Version="$(LibraryVersion)" />
     <PackageReference Include="SqlStreamStore.HAL" Version="$(LibraryVersion)" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Browser\build\**">

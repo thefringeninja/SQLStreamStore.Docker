@@ -5,11 +5,15 @@ set -e
 CONTAINER_RUNTIME=${CONTAINER_RUNTIME:-alpine3.9}
 LIBRARY_VERSION=${LIBRARY_VERSION:-1.2.0-beta.8}
 CLIENT_VERSION=${CLIENT_VERSION:-0.9.4}
+NPM_REGISTRY=${NPM_REGISTRY:-npm.pkg.github.com}
 
 LOCAL_IMAGE="sql-stream-store-server"
 LOCAL="${LOCAL_IMAGE}:latest"
 
-REMOTE_IMAGE="thefringeninja/sqlstreamstore-server"
+REMOTE_IMAGE="ghcr.io/thefringeninja/sqlstreamstore-server"
+
+npm config set @thefringeninja:registry "https://${NPM_REGISTRY}" --location=project && \
+  npm config set "//${NPM_REGISTRY}/:_authToken" $GITHUB_TOKEN --location=project
 
 docker build \
     --build-arg CONTAINER_RUNTIME_VERSION=${CONTAINER_RUNTIME_VERSION:-2.2.6} \

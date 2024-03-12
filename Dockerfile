@@ -4,19 +4,17 @@ ARG CONTAINER_RUNTIME=alpine3.9
 FROM node:10.12.0-alpine AS build-javascript
 ARG CLIENT_PACKAGE=@thefringeninja/browser
 ARG CLIENT_VERSION=0.9.4
-ARG NPM_REGISTRY=https://npm.pkg.github.com/
+ARG NPM_REGISTRY=npm.pkg.github.com
 ARG GITHUB_TOKEN
 
 ENV REACT_APP_CLIENT_VERSION=${CLIENT_VERSION}
 
 WORKDIR /app
 
-RUN --mount=type=secret,id=GITHUB_TOKEN \
-    npm config set @thefringeninja:registry ${NPM_REGISTRY} && \
-    npm config set "//${NPM_REGISTRY}/:authToken" $(cat /run/secrets/GITHUB_TOKEN) && \
-    npm config set always-auth true && \
-    npm init --yes && \
-    npm add ${CLIENT_PACKAGE}@${CLIENT_VERSION}
+COPY .npmrc .npmrc
+
+RUN yarn init --yes && \
+    yarn add ${CLIENT_PACKAGE}@${CLIENT_VERSION}
 
 WORKDIR /app/node_modules/${CLIENT_PACKAGE}
 
@@ -75,7 +73,7 @@ WORKDIR /app
 
 COPY ./*.sln .git ./
 
-RUN dotnet minver > .version
+RUN dotnet tool install --global --version=2.0.0 minver-cli && /root/.dotnet/tools/minver > .version
 
 RUN dotnet run --project build/build.csproj -- --runtime=${RUNTIME} --library-version=${LIBRARY_VERSION}
 

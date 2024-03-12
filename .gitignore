@@ -253,3 +253,7 @@ paket-files/
 
 # Generated Schema Documentation
 **/Schema/*.schema.md
+
+.npmrc
+package.json
+yarn.lock
